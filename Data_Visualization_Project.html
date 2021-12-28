@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<style>
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+</style>
+
+<body>
+
+<!-- load the d3.js library -->	
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+var treeData =
+  {
+    "name": "World",
+    "children": [
+      { 
+        "name": "Asia",
+        "children": [
+
+          { "name": "China" },
+          { "name": "India" },
+          { "name": "Indonesia" },
+          { "name": "Pakistan",
+              "children":
+          [   
+              {"name":"Punjab",
+              "children":
+              [
+                {"name":"Bahawalpur"},
+                {"name":"Dera Ghazi Khan "},
+                {"name":"Faisalabad"},
+                {"name":"Gujranwala"},
+                {"name":"Lahore"},
+                {"name":"Multan"},
+                {"name":"Rawalpindi"},
+                {"name":"Sahiwal"},
+                {"name":"Sargodha"},
+
+              ]
+              
+              },
+              {"name":"Sindh",
+               "children":
+              [
+                {"name":"Banbhore"},
+                {"name":"Hyderabad"},
+                {"name":"Karachi"},
+                {"name":"Sukkur"},
+                {"name":"Larkana"},
+                {"name":"Mirpur Khas"},
+                {"name":"Shaheed Benazirabad"},
+
+              ]
+               
+              },
+              {"name":"Khyber Pakhtunkhwa",
+               "children":
+               [
+                  {"name":"Bannu"},
+                  {"name":"Dera Ismail Khan"},
+                  {"name":"Hazara"},
+                  {"name":"Kohat"},
+                  {"name":"Malakand"},
+                  {"name":"Mardan"},
+                  {"name":"Peshawar"},
+               ]
+              },
+              {"name":"Balochistan",
+               "children":
+               [
+                  {"name":"Kalat"},
+                  {"name":"Makran"},
+                  {"name":"Naseerabad"},
+                  {"name":"Quetta"},
+                  {"name":"Sibi"},
+                  {"name":"Zhob"},
+                  {"name":"Rakhshan"},
+               ]
+              
+              },
+              {"name":"Gilgit Baltistan",
+               "children":
+               [
+                  {"name":"Gilgit"},
+                  {"name":"Baltistan"},
+                  {"name":"Diamer"},
+               ]
+              
+              },
+              {"name":"Azad Jammu & Kashmir",
+               "children":
+               [
+                  {"name":"Mirpur"},
+                  {"name":"Muzaffarabad"},
+                  {"name":""},
+               ]
+              },
+          ] 
+          
+          },
+
+          { "name": "Bangladesh" },
+          { "name": "Japan" },
+          { "name": "Philippines" },
+          { "name": "Vietnam" },
+          { "name": "Turkey" },
+          { "name": "Iran" },
+          { "name": "Thailand" },
+          { "name": "Myanmar" },
+          { "name": "South Korea" },
+          { "name": "Iraq" },
+          { "name": "Afghanistan" },
+          { "name": "Saudi Arabia" },
+          { "name": "Uzbekistan" },
+          { "name": "Malaysia" },
+          { "name": "Yemen" },
+          { "name": "Nepal" },
+          { "name": "North Korea" },
+          { "name": "Sri Lanka" },
+          { "name": "Kazakhstan" },
+          { "name": "Syria" },
+          { "name": "Cambodia" },
+          { "name": "Jordon" },
+          { "name": "Azerbaijan" },
+          { "name": "United Arab Emirates" },
+          { "name": "Tajikistan" },
+          { "name": "Israel" },
+          { "name": "Laos" },
+          { "name": "Lebanon" },
+          { "name": "Kyrgyzstan" },
+          { "name": "Turkmenistan" },
+          { "name": "Singapore" },
+          { "name": "Oman" },
+          { "name": "State of Palestine" },
+          { "name": "Kuwait" },
+          { "name": "Georgia" },
+          { "name": "Mongolia" },
+          { "name": "Armenia" },
+          { "name": "Qatar" },
+          { "name": "Bahrain" },
+          { "name": "Timor-Leste" },
+          { "name": "Cyprus" },
+          { "name": "Bhutan" },
+          { "name": "Maldives" },
+          { "name": "Brunai" },
+          { "name": "Taiwan" },
+          { "name": "Hong Kong" }, 
+          { "name": "Macao" },
+          
+        ]
+      },
+      { "name": "Africa", 
+          "children": [
+              {"name": "Nigeria"},
+              {"name": "Ethiopia"},
+              {"name": "Egypt"},
+              {"name": "DR Congo"},
+              {"name": "Tanzania"},
+              {"name": "South Africa"},
+              {"name": "Kenya"},
+              {"name": "Uganda"},
+              {"name": "Algeria"},
+              {"name": "Sudan"},
+              {"name": "Morocco"},
+              {"name": "Angola"},
+              {"name": "Mozambique"},
+              {"name": "Ghana"},
+              {"name": "Madagascar"},
+              {"name": "Cameroon"},
+              {"name": "Cote d'lvoire"},
+              {"name": "Niger"},
+              {"name": "Burkina Faso"},
+              {"name": "Mali"},
+              {"name": "Malawi"},
+              {"name": "Zambia"},
+              {"name": "Senegal"},
+              {"name": "Chad"},
+              {"name": "Somalia"},
+              {"name": "Zimbabwe"},
+              {"name": "Guinea"},
+              {"name": "Rwanda"},
+              {"name": "Benin"},
+              {"name": "Burundi"},
+              {"name": "Tunisia"},
+              {"name": "South Sudan"},
+              {"name": "Togo"},
+              {"name": "Sierra Leone"},
+              {"name": "Libya"},
+              {"name": "Congo"},
+              {"name": "Liberia"},
+              {"name": "Central African Republic"},
+              {"name": "Mauritania"},
+              {"name": "Eritrea"},
+              {"name": "Namibia"},
+              {"name": "Gambia"},
+              {"name": "Botswana"},
+              {"name": "Gabon"},
+              {"name": "Lesotho"},
+              {"name": "Guinea-Bissau"},
+              {"name": "Equatorial Guinea"},
+              {"name": "Mauritius"},
+              {"name": "Eswatini"},
+              {"name": "Dijibouti"},
+              {"name": "Comoros"},
+              {"name": "Cabo Verde"},
+              {"name": "Sao Tome & Principe"},
+              {"name": "Seychelles"},
+              {"name": "Reunion"},
+              {"name": "Western Sahara"},
+              {"name": "Mayotte"},
+              {"name": "Saint Helena"},
+
+        ]      
+      },
+      { "name": "North America", 
+          "children": 
+          [
+            {"name":"Antigua & Barbuda"},
+            {"name": "Bahamas"},
+            {"name": "Barbados"},
+            {"name": "Belize"},
+            {"name": "Canada"},
+            {"name": "Costa Rica"},
+            {"name": "Cuba"},
+            {"name": "Dominica"},
+            {"name": "Dominican Republic"},
+            {"name": "EI Salvador"},
+            {"name": "Grenada"},
+            {"name": "Guatemala"},
+            {"name": "Haiti"},
+            {"name": "Honduras"},
+            {"name": "Jamaica"},
+            {"name": "Mexico"},
+            {"name": "Nicaragua"},
+            {"name": "Panama"},
+            {"name": "Saint Kitts & Nevis"},
+            {"name":"Saint Lucia"},
+            {"name":"Saint Vincent and the Grenadines"},
+            {"name":"Trinidad & Tobago"},
+            {"name":"United States"},
+            {"name":"Anguilla"},
+            {"name":"Bajo Nuevo Bank"},
+            {"name":"Bermuda"},
+            {"name":"British Virgin Islands"},
+            {"name":"Cayman Islands"},
+            {"name":"Montserrat"},
+            {"name":"Navassa Island"},
+            {"name":"Puerto Rico"},
+            {"name":"Serranilla Bank"},
+            {"name":"Turks Caicos Islands"},
+            {"name":"United States Virgin Islands"},
+            {"name":"Aruba"},
+            {"name":"Bonaire"},
+            {"name":"Clipperton Island"},
+            {"name":"Curacao"},
+            {"name":"Greenland"},
+            {"name":"Guadeloupe"},
+            {"name":"Martinique"},
+            {"name":"Saba"},
+            {"name":"Saint Barthelemy"},
+            {"name":"Saint Martin"},
+            {"name":"Saint Pierre & Miquelon "},
+            {"name":"San Andres and Providencia"},
+            {"name":"Sint Eustatius"},
+            {"name":"Sint Maarten"},
+
+        ]
+      },
+      { "name": "South America" ,
+        "children": 
+        [
+          {"name":"Brazil"},
+          {"name":"Colombia"},
+          {"name":"Argentina"},
+          {"name":"Peru"},
+          {"name":"Venezuela"},
+          {"name":"Chile"},
+          {"name":"Ecuador"},
+          {"name":"Bolivia"},
+          {"name":"Paraguay"},
+          {"name":"Uruguay"},  
+          {"name":"Guyana"},
+          {"name":"Suriname"},
+          {"name":"French Guiana"},
+          {"name":"Falklan Islands"},
+
+        ]
+      
+      },
+      { "name": "Antarctica" },
+
+      { "name": "Europe",
+        "children":[
+          {"name":"Russia"},
+          {"name":"Germany"},
+          {"name":"United Kingdom"},
+          {"name":"France"},
+          {"name":"Italy"},
+          {"name":"Spain"},
+          {"name":"Ukraine"},
+          {"name":"Poland"},
+          {"name":"Romania"},
+          {"name":"Netherlands"},
+          {"name":"Belgium"},
+          {"name":"Czech Republic"},
+          {"name":"Greece"},
+          {"name":"Portugal"},
+          {"name":"Sweden"},
+          {"name":"Hungary"},
+          {"name":"Belarus"},
+          {"name":"Austria"},
+          {"name":"Serbia"},
+          {"name":"Switzerland"},
+          {"name":"Bulgaria"},
+          {"name":"Denmark"},
+          {"name":"Finland"},
+          {"name":"Slovakia"},
+          {"name":"Norway"},
+          {"name":"Ireland"},
+          {"name":"Croatia"},
+          {"name":"Moldova"},
+          {"name":"Bosnia & Herzegovina"},
+          {"name":"Albania"},
+          {"name":"Lithuania"},
+          {"name":"North Macedonia"},
+          {"name":"Slovenia"},
+          {"name":"Latvia"},
+          {"name":"Estonia"},
+          {"name":"Montenegro"},
+          {"name":"Luxembourg"},
+          {"name":"Malta"},
+          {"name":"Iceland"},
+          {"name":"Andorra"},
+          {"name":"Monaco"},
+          {"name":"Liechtenstein"},
+          {"name":"San Marino"},
+          {"name":"Holy See"},
+          {"name":"Channel Islands"},
+          {"name":"Isle of Man"},
+          {"name":"Faeroe Islands"},
+          {"name":"Gibraltar"},
+        ]
+      
+      },
+      { "name": "Australia",
+        "children": 
+          [
+            {"name":"Australia"},
+            {"name":"Fiji"},
+            {"name":"Kiribati"},
+            {"name":"Marshall Islands"},
+            {"name":"Micronesia"},
+            {"name":"Nauru"},
+            {"name":"New Zealand"},
+            {"name":"Palau"},
+            {"name":"Papua New Guinea"},
+            {"name":"Samoa"},
+            {"name":"Solomom Islands"},
+            {"name":"Tonga"},
+            {"name":"Tuvalu"},
+            {"name":"Vanuatu"},
+          ]
+       }
+    ]
+  };
+
+// Set the dimensions and margins of the diagram
+var margin = {top: 70, right: 20, bottom: 20, left: 300},
+    width = 1300 - margin.left - margin.right,
+    height = 1200 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.right + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate("
+          + margin.left + "," + margin.top + ")");
+
+var i = 0,
+    duration = 500,
+    root;
+
+// declares a tree layout and assigns the size
+var treemap = d3.tree().size([height, width]);
+
+// Assigns parent, children, height, depth
+root = d3.hierarchy(treeData, function(d) { return d.children; });
+root.x0 = height / 2;
+root.y0 = 0;
+
+// Collapse after the second level
+root.children.forEach(collapse);
+
+update(root);
+
+// Collapse the node and all it's children
+function collapse(d) {
+  if(d.children) {
+    d._children = d.children
+    d._children.forEach(collapse)
+    d.children = null
+  }
+}
+
+function update(source) {
+
+  // Assigns the x and y position for the nodes
+  var treeData = treemap(root);
+
+  // Compute the new tree layout.
+  var nodes = treeData.descendants(),
+      links = treeData.descendants().slice(1);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d){ d.y = d.depth * 180});
+
+  // ****************** Nodes section ***************************
+
+  // Update the nodes...
+  var node = svg.selectAll('g.node')
+      .data(nodes, function(d) {return d.id || (d.id = ++i); });
+
+  // Enter any new modes at the parent's previous position.
+  var nodeEnter = node.enter().append('g')
+      .attr('class', 'node')
+      .attr("transform", function(d) {
+        return "translate(" + source.y0 + "," + source.x0 + ")";
+    })
+    .on('click', click);
+
+  // Add Circle for the nodes
+  nodeEnter.append('circle')
+      .attr('class', 'node')
+      .attr('r', 1e-6)
+      .style("fill", function(d) {
+          return d._children ? "lightsteelblue" : "#fff";
+      });
+
+  // Add labels for the nodes
+  nodeEnter.append('text')
+      .attr("dy", ".35em")
+      .attr("x", function(d) {
+          return d.children || d._children ? -13 : 13;
+      })
+      .attr("text-anchor", function(d) {
+          return d.children || d._children ? "end" : "start";
+      })
+      .text(function(d) { return d.data.name; });
+
+  // UPDATE
+  var nodeUpdate = nodeEnter.merge(node);
+
+  // Transition to the proper position for the node
+  nodeUpdate.transition()
+    .duration(duration)
+    .attr("transform", function(d) { 
+        return "translate(" + d.y + "," + d.x + ")";
+     });
+
+  // Update the node attributes and style
+  nodeUpdate.select('circle.node')
+    .attr('r', 10)
+    .style("fill", function(d) {
+        return d._children ? "lightsteelblue" : "#fff";
+    })
+    .attr('cursor', 'pointer');
+
+
+  // Remove any exiting nodes
+  var nodeExit = node.exit().transition()
+      .duration(duration)
+      .attr("transform", function(d) {
+          return "translate(" + source.y + "," + source.x + ")";
+      })
+      .remove();
+
+  // On exit reduce the node circles size to 0
+  nodeExit.select('circle')
+    .attr('r', 1e-6);
+
+  // On exit reduce the opacity of text labels
+  nodeExit.select('text')
+    .style('fill-opacity', 1e-6);
+
+  // ****************** links section ***************************
+
+  // Update the links...
+  var link = svg.selectAll('path.link')
+      .data(links, function(d) { return d.id; });
+
+  // Enter any new links at the parent's previous position.
+  var linkEnter = link.enter().insert('path', "g")
+      .attr("class", "link")
+      .attr('d', function(d){
+        var o = {x: source.x0, y: source.y0}
+        return diagonal(o, o)
+      });
+
+  // UPDATE
+  var linkUpdate = linkEnter.merge(link);
+
+  // Transition back to the parent element position
+  linkUpdate.transition()
+      .duration(duration)
+      .attr('d', function(d){ return diagonal(d, d.parent) });
+
+  // Remove any exiting links
+  var linkExit = link.exit().transition()
+      .duration(duration)
+      .attr('d', function(d) {
+        var o = {x: source.x, y: source.y}
+        return diagonal(o, o)
+      })
+      .remove();
+
+  // Store the old positions for transition.
+  nodes.forEach(function(d){
+    d.x0 = d.x;
+    d.y0 = d.y;
+  });
+
+  // Creates a curved (diagonal) path from parent to the child nodes
+  function diagonal(s, d) {
+
+    path = `M ${s.y} ${s.x}
+            C ${(s.y + d.y) / 2} ${s.x},
+              ${(s.y + d.y) / 2} ${d.x},
+              ${d.y} ${d.x}`
+
+    return path
+  }
+
+  // Toggle children on click.
+  function click(d) {
+    if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else {
+        d.children = d._children;
+        d._children = null;
+      }
+    update(d);
+  }
+}
+
+</script>
+</body>
+</html>
